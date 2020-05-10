@@ -1,0 +1,52 @@
+---
+title: "Día de las madres"
+output: html_notebook
+---
+# Cargamos los paquete necesarios
+Para poder instalar el paquete "ggpomological" puedes visitar su Página  https://www.garrickadenbuie.com/project/ggpomological/
+```{r}
+library(ggpomological)
+library(tidyverse)
+```
+
+# Creamos nuestro pequeño dataset 
+
+```{r}
+data <- data_frame(Categoria = c("que me regañes", "quererte !", "que me cocines", "que me abraces"),
+                   Porcentaje = c(.1, 1, .75, .25)
+                   )
+
+```
+
+# Creamos nuestra gráfica
+
+```{r}
+
+plot <- data %>% 
+  ggplot() +
+  geom_col(aes(x = reorder(str_wrap(Categoria,2),Porcentaje), 
+               y = Porcentaje, 
+               fill = reorder(str_wrap(Categoria,2),Porcentaje)), show.legend = T) + 
+  labs(fill = "En el año quiero :",
+       x = NULL,
+       title = "Lo que quiero de mamá") +
+  scale_fill_pomological() + # funcion del paquete ggpomological
+  theme_pomological_fancy(base_family = "Homemade Apple", base_size = 16) + # funcion del paquete ggpomological
+  scale_y_continuous(labels = scales::percent,
+                     breaks = seq(-1,1,.2)) +
+  theme(axis.text.x = element_blank(),
+        legend.text = element_text(),
+        legend.key.height  = unit(1.5, "cm")
+        ) 
+
+plot
+
+```
+
+# Guardamos
+
+```{r}
+paint_pomological(plot, width = 800, height = 500, res = 110) %>%  # funcion del paquete ggpomological
+  magick::image_write("plot.png")
+```
+
